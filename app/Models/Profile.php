@@ -8,6 +8,7 @@ use App\Enums\UserGenderEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 final class Profile extends Model
 {
@@ -18,25 +19,31 @@ final class Profile extends Model
         'avatar_path',
         'birtdate',
         'gender',
-        'country',
-        'languages',
+        'location',
+        'interests',
         'visited_countries',
         'bio',
-        'description'
+        'description',
+        'profile_completion',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function languages(): BelongsToMany
+    {
+        return $this->belongsToMany(Language::class, 'profile_language')->withPivot('level');
+    }
 
     protected function casts(): array
     {
         return [
             'gender' => UserGenderEnum::class,
             'birthdate' => 'date',
-            'languages' => 'array',
-            'visited_countries' => 'array'
+            'interests' => 'array',
+            'visited_countries' => 'array',
         ];
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }

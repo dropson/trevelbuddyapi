@@ -5,29 +5,40 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Auth\Events\Verified;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 final class VerifyEmailController extends Controller
 {
-    /**
-     * Mark the authenticated user's email address as verified.
-     */
-    public function __invoke(EmailVerificationRequest $request): RedirectResponse
+    public function verify(Request $request, $id, $hash)
+    {
+
+        $user = User::findOrFail($id);
+
+        if (! hash_equals((string) $hash, sha1((string) $user->getEmailForVerification()))) {
+            return redirect(config('app.frontend_url').'/verify?status=invalid');
+        }
+
+        if ($user->hasVerifiedEmail()) {
+            return redirect(config('app.frontend_url').'/verify?status=already_verified');
+        }
+
+        if ($user->markEmailAsVerified()) {
+            event(new Verified($user));
+        }
+
+        return redirect(config('app.frontend_url').'/verify?status=success');
+    }
+
+    public function resend(Request $request)
     {
         if ($request->user()->hasVerifiedEmail()) {
-            return redirect()->intended(
-                config('app.frontend_url').'/dashboard?verified=1'
-            );
+            return response()->json(['message' => 'Already verified'], 400);
         }
 
-        if ($request->user()->markEmailAsVerified()) {
-            event(new Verified($request->user()));
-        }
+        $request->user()->sendEmailVerificationNotification();
 
-        return redirect()->intended(
-            config('app.frontend_url').'/dashboard?verified=1'
-        );
+        return response()->json(['message' => 'Verification link sent']);
     }
 }

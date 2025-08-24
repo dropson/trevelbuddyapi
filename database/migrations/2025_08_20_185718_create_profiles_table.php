@@ -21,11 +21,12 @@ return new class extends Migration
             $table->string('avatar_path')->nullable();
             $table->date('birthdate')->nullable();
             $table->enum('gender', UserGenderEnum::cases());
-            $table->string('country')->nullable();
-            $table->json('languages')->nullable();
+            $table->string('location')->nullable();
             $table->json('visited_countries')->nullable();
+            $table->json('interests')->nullable();
             $table->string('bio');
             $table->text('description')->nullable();
+            $table->integer('profile_completion')->default(0);
             $table->timestamps();
         });
     }
