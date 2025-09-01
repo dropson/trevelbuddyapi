@@ -31,7 +31,7 @@ final class AuthenticatedUserController extends Controller
             'Authenticated',
             [
                 'token' => $user->createToken('auth-token')->plainTextToken,
-                'user' => new UserResource($user),
+                'user' => new UserResource($user->load('profile')),
             ]
         );
     }

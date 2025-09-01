@@ -17,7 +17,7 @@ final class RegisterUserAction
             'email' => $data->email,
             'password' => Hash::make($data->password),
         ]);
-
+        $user->profile()->create();
         $user->assignRole($data->role);
 
         return $user;

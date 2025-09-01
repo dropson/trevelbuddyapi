@@ -19,14 +19,13 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('full_name')->nullable();
             $table->string('avatar_path')->nullable();
-            $table->date('birthdate')->nullable();
-            $table->enum('gender', UserGenderEnum::cases());
+            $table->string('banner_path')->nullable();
+            $table->date('birth_date')->nullable();
+            $table->enum('gender', UserGenderEnum::cases())->nullable();
             $table->string('location')->nullable();
             $table->json('visited_countries')->nullable();
-            $table->json('interests')->nullable();
-            $table->string('bio');
+            $table->string('bio')->nullable();
             $table->text('description')->nullable();
-            $table->integer('profile_completion')->default(0);
             $table->timestamps();
         });
     }
