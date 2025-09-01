@@ -13,7 +13,7 @@ final class ProfileCompletionService
         'avatar_path' => 15,
         'birth_date' => 5,
         'gender' => 5,
-        'location' => 10,
+        'country' => 10,
         'visited_countries' => 15,
         'interests' => 10,
         'bio' => 15,

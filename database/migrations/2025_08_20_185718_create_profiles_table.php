@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('banner_path')->nullable();
             $table->date('birth_date')->nullable();
             $table->enum('gender', UserGenderEnum::cases())->nullable();
-            $table->string('location')->nullable();
+            $table->foreignId('country_id')->nullable()->constrained('countries')->nullOnDelete();
+            $table->string('city')->nullable();
             $table->json('visited_countries')->nullable();
             $table->string('bio')->nullable();
             $table->text('description')->nullable();

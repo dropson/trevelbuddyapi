@@ -21,7 +21,12 @@ final class ProfileResource extends JsonResource
             'banner' => $this->banner_url,
             'gender' => $this->gender,
             'birth_date' => $this->birth_date,
-            'location' => $this->location,
+            'country' => $this->country ? [
+                'id' => $this->country->id,
+                'name' => $this->country->name,
+                'code' => $this->country->code,
+            ] : null,
+            'city' => $this->city,
             'languages' => LanguageResource::collection($this->languages),
             'visited_countries' => $this->visited_countries,
             'bio' => $this->bio,

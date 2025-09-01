@@ -22,7 +22,8 @@ final class Profile extends Model
         'banner_path',
         'birth_date',
         'gender',
-        'location',
+        'country_id',
+        'city',
         'visited_countries',
         'bio',
         'description',
@@ -33,6 +34,11 @@ final class Profile extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class);
     }
 
     public function languages(): BelongsToMany
@@ -55,7 +61,7 @@ final class Profile extends Model
         return $this->banner_path ? Storage::disk('public')->url($this->banner_path) : null;
     }
 
-    public function getBirthDayAttribute($value): ?string
+    public function getBirthDateAttribute($value): ?string
     {
         return $value ? Carbon::parse($value)->format('Y-m-d') : null;
     }

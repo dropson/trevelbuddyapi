@@ -19,7 +19,7 @@ return [
     'avatar_path' => 'Avatar',
     'birth_date' => 'Birthday',
     'gender' => 'Gender',
-    'location' => 'Current location',
+    'country' => 'Country',
     'visited_countries' => 'Visited countries',
     'interests' => 'Interests',
     'bio' => 'Bio',

@@ -17,7 +17,8 @@ final class UploadProfileInformationAction
             'full_name' => $dto->fullname,
             'gender' => $dto->gender,
             'birth_date' => $dto->birthdate,
-            'location' => $dto->location,
+            'country_id' => $dto->country,
+            'city' => $dto->city,
             'visited_countries' => $dto->visited_countries,
             'bio' => $dto->bio,
             'description' => $dto->description,
@@ -25,7 +26,6 @@ final class UploadProfileInformationAction
         ]);
         $profile->save();
 
-        //  TOdo languages
         if ($dto->languages !== null) {
             $profile->languages()->sync($dto->languages);
         }
