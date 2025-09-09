@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
+use App\Models\Trip;
+use App\Observers\TripObserver;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
@@ -22,6 +24,8 @@ final class AppServiceProvider extends ServiceProvider
     {
         Model::preventLazyLoading();
         ResetPassword::createUrlUsing(fn (object $notifiable, string $token): string => config('app.frontend_url')."/password-reset/$token?email={$notifiable->getEmailForPasswordReset()}");
+
+        Trip::observe(TripObserver::class);
 
     }
 }

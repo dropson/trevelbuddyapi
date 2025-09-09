@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\API\V1\ProfileController;
+use App\Http\Controllers\API\V1\Trip\MyTripController;
+use App\Http\Controllers\API\V1\Trip\TripStatusController;
 use App\Http\Resources\V1\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -10,7 +12,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('verified')->group(function () {
-        // create trip and another things with verified
+
+        Route::prefix('my-trips')->group(function () {
+            Route::post('/', [MyTripController::class, 'store']);
+            Route::get('/{trip:slug}', [MyTripController::class, 'show']);
+            Route::put('/{trip:slug}', [MyTripController::class, 'update']);
+            Route::delete('/{trip:slug}', [MyTripController::class, 'destroy']);
+        });
+
+        Route::post('trips/{trip:slug}/status', TripStatusController::class);
     });
 
     Route::get('/me', function (Request $request) {

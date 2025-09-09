@@ -8,6 +8,7 @@ enum UserGenderEnum: string
 {
     case MALE = 'male';
     case FEMALE = 'female';
+    case MIXED = 'mixed';
 
     public static function values(): array
     {
