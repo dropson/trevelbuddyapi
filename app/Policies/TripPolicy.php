@@ -17,7 +17,7 @@ final class TripPolicy
 
     public function cancel(User $user, Trip $trip): bool
     {
-        return $user->id === $trip->creator_id && $trip->status === TripStatusEnum::PENDING;
+        return $user->id === $trip->creator_id && in_array($trip->status, [TripStatusEnum::PENDING, TripStatusEnum::ACTIVE], true);
     }
 
     public function approve(User $user, Trip $trip): bool
@@ -32,6 +32,7 @@ final class TripPolicy
 
     public function update(User $user, Trip $trip): bool
     {
+
         return $user->id === $trip->creator_id
             && in_array($trip->status, [TripStatusEnum::DRAFT, TripStatusEnum::ACTIVE, TripStatusEnum::REJECTED], true);
     }

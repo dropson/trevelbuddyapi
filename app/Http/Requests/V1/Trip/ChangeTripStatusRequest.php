@@ -19,7 +19,7 @@ final class ChangeTripStatusRequest extends FormRequest
     {
         return [
             'status' => ['required', Rule::in(TripStatusEnum::values())],
-            'cancel_reason' => ['required_if:status,Cancelled', 'string'],
+            'cancel_reason' => ['required_if:status,rejected', 'string'],
         ];
     }
 }

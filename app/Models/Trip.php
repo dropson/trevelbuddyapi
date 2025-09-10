@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\TripAccommodationEnum;
 use App\Enums\TripStatusEnum;
 use App\Enums\UserGenderEnum;
+use App\Enums\UserRoleEnum;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,6 +31,7 @@ final class Trip extends Model
         'end_date',
         'status',
         'category_id',
+        'cancel_reason',
         'max_mates',
         'gender_preference',
         'accommodation',
@@ -65,9 +67,13 @@ final class Trip extends Model
         return Storage::disk('public')->url($this->image_path);
     }
 
-    public function allowedTransitions(): array
+    public function allowedTransitionsFor(User $user): array
     {
-        return array_map(fn (TripStatusEnum $s) => $s->value, $this->status->transitions());
+        if ($user->hasRole(UserRoleEnum::MODERATOR)) {
+            return array_map(fn (TripStatusEnum $s) => $s->value, $this->status->moderatorTransitions());
+        }
+
+        return array_map(fn (TripStatusEnum $s) => $s->value, $this->status->userTransitions());
     }
 
     public function getCreatedAtAttribute($value): ?string

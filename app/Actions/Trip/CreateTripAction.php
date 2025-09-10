@@ -4,20 +4,26 @@ declare(strict_types=1);
 
 namespace App\Actions\Trip;
 
-use App\DTOs\TripDTO;
+use App\DTOs\TripCreateDTO;
 use App\Enums\TripStatusEnum;
 use App\Models\Trip;
 use App\Models\User;
+use App\Services\TripStatusMessage;
 use Illuminate\Support\Str;
 
 final class CreateTripAction
 {
-    public function handle(TripDTO $dto, User $creator): Trip
+    public function handle(TripCreateDTO $dto, User $creator): array
     {
 
         $status = $dto->publish
-            ? TripStatusEnum::PENDING->value
-            : TripStatusEnum::DRAFT->value;
+            ? TripStatusEnum::PENDING
+            : TripStatusEnum::DRAFT;
+
+        $message = TripStatusMessage::forUser(
+            TripStatusEnum::DRAFT,
+            $status
+        );
 
         $trip = new Trip([
             'creator_id' => $creator->id,
@@ -43,6 +49,6 @@ final class CreateTripAction
 
         $trip->languages()->sync($dto->languages);
 
-        return $trip->fresh(['country', 'creator', 'languages']);
+        return [$trip->fresh(['country', 'creator', 'languages']), $message];
     }
 }

@@ -6,11 +6,11 @@ namespace App\Enums;
 
 enum TripAccommodationEnum: string
 {
-    case CAMPSIDE = 'Campside';
-    case HOTEL = 'Hotel';
-    case HOSTEL = 'Hostel';
-    case HOMESTAY = 'Homestay';
-    case MIXED = 'Mixed';
+    case CAMPSIDE = 'campside';
+    case HOTEL = 'hotel';
+    case HOSTEL = 'hostel';
+    case HOMESTAY = 'homestay';
+    case MIXED = 'mixed';
 
     public static function values(): array
     {

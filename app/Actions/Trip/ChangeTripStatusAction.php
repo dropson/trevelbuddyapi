@@ -11,10 +11,9 @@ use DomainException;
 
 final class ChangeTripStatusAction
 {
-    public function handle(Trip $trip, User $user, array $data)
+    public function handle(Trip $trip, User $user, array $data): Trip
     {
-
-        if (! in_array($data['status'], $trip->allowedTransitions())) {
+        if (! in_array($data['status'], $trip->allowedTransitionsFor($user))) {
             throw new DomainException("Invalid status transition from {$trip->status->value} to {$data['status']->value}");
         }
 
@@ -24,9 +23,9 @@ final class ChangeTripStatusAction
                 'cancel_reason' => $data['cancel_reason'] ?? null,
             ]
         );
-
         if (in_array($data['status'], [TripStatusEnum::ACTIVE, TripStatusEnum::REJECTED])) {
             // $trip->creator->notify(new TripStatusChanged($trip, $newStatus, $user));
+            // TODO event
         }
 
         return $trip->fresh();

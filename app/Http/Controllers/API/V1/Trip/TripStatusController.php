@@ -8,8 +8,9 @@ use App\Actions\Trip\ChangeTripStatusAction;
 use App\Enums\TripStatusEnum;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\V1\Trip\ChangeTripStatusRequest;
-use App\Http\Resources\V1\TripResource;
+use App\Http\Resources\V1\Trip\TripOwnerResource;
 use App\Models\Trip;
+use App\Services\TripStatusMessage;
 use Illuminate\Http\JsonResponse;
 
 final class TripStatusController extends ApiController
@@ -18,17 +19,18 @@ final class TripStatusController extends ApiController
     {
         $data = $request->validated();
         $newStatus = TripStatusEnum::from($data['status']);
+        $oldStatus = $trip->status;
+
         match ($newStatus) {
             TripStatusEnum::ACTIVE => $this->authorize('approve', $trip),
             TripStatusEnum::REJECTED => $this->authorize('reject', $trip),
-            TripStatusEnum::COMPLETED => $this->authorize('complete', $trip),
-            TripStatusEnum::DRAFT => $this->authorize('cancel', $trip),
-            TripStatusEnum::PENDING => $this->authorize('publish', $trip),
             default => $this->authorize('update', $trip),
         };
 
         $trip = $action->handle($trip, $request->user(), $data);
 
-        return $this->success($newStatus->successMessage(), new TripResource($trip->fresh()));
+        $message = TripStatusMessage::forModerator($oldStatus, $newStatus);
+
+        return $this->success($message, new TripOwnerResource($trip));
     }
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\API\V1\ProfileController;
-use App\Http\Controllers\API\V1\Trip\MyTripController;
+use App\Http\Controllers\API\V1\Trip\TripOwnerController;
 use App\Http\Controllers\API\V1\Trip\TripStatusController;
 use App\Http\Resources\V1\UserResource;
 use Illuminate\Http\Request;
@@ -13,11 +13,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::middleware('verified')->group(function () {
 
-        Route::prefix('my-trips')->group(function () {
-            Route::post('/', [MyTripController::class, 'store']);
-            Route::get('/{trip:slug}', [MyTripController::class, 'show']);
-            Route::put('/{trip:slug}', [MyTripController::class, 'update']);
-            Route::delete('/{trip:slug}', [MyTripController::class, 'destroy']);
+        Route::prefix('trips/owner')->group(function () {
+            Route::get('/', [TripOwnerController::class, 'index']);
+            Route::post('/', [TripOwnerController::class, 'store']);
+            Route::get('/{trip:slug}', [TripOwnerController::class, 'show']);
+            Route::put('/{trip:slug}', [TripOwnerController::class, 'update']);
+            Route::delete('/{trip:slug}', [TripOwnerController::class, 'destroy']);
         });
 
         Route::post('trips/{trip:slug}/status', TripStatusController::class);

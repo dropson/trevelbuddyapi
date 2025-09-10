@@ -9,7 +9,7 @@ use App\Enums\UserGenderEnum;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreTripRequest extends FormRequest
+final class StoreTripRequest extends FormRequest
 {
     public function authorize(): bool
     {

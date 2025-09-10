@@ -10,7 +10,7 @@ use App\Http\Requests\V1\Trip\StoreTripRequest;
 use App\Http\Requests\V1\Trip\UpdateTripRequest;
 use Illuminate\Http\UploadedFile;
 
-final class TripDTO
+final class TripCreateDTO
 {
     public function __construct(
         public int $country_id,
