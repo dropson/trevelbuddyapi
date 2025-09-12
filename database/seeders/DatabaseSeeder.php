@@ -5,18 +5,16 @@ declare(strict_types=1);
 namespace Database\Seeders;
 
 use App\Enums\UserRoleEnum;
+use App\Models\Profile;
+use App\Models\Trip;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 final class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
         $this->call([
             CountrySeeder::class,
             CategorySeeder::class,
@@ -24,10 +22,21 @@ final class DatabaseSeeder extends Seeder
             InterestSeeder::class,
             RolesAndPermissionSeeder::class,
         ]);
-        $user = User::factory()->create([
+
+        $moderator = User::factory()->create([
             'email' => 'test@example.com',
         ]);
-        $user->profile()->create();
-        $user->assignRole(UserRoleEnum::TRAVELER->value);
+        $moderator->profile()->create(
+            [
+                'full_name' => 'Moderator',
+                'gender' => 'male',
+            ]
+        );
+        $moderator->assignRole(UserRoleEnum::MODERATOR->value);
+
+        $travelers = User::factory(20)->has(Profile::factory())->create()->each(function ($user): void {
+            $user->assignRole(UserRoleEnum::TRAVELER->value);
+        });
+        Trip::factory(53)->recycle($travelers)->create();
     }
 }
