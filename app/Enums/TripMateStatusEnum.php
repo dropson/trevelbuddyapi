@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enums;
 
 enum TripMateStatusEnum: string
@@ -7,7 +9,7 @@ enum TripMateStatusEnum: string
     case PENDING = 'pending';
     case APPROVED = 'approved';
     case REJECTED = 'rejected';
-     case CANCELLED = 'cancelled';
+    case CANCELLED = 'cancelled';
     case REMOVED = 'removed';
 
     public static function values(): array

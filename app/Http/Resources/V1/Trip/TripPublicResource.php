@@ -14,6 +14,7 @@ final class TripPublicResource extends BaseTripResource
     {
         $user = $request->user();
         $mate = $this->mates()->where('user_id', $user->id)->first();
+
         return array_merge($this->baseData(), [
             'creator' => [
                 'id' => $this->creator->id,
@@ -26,7 +27,7 @@ final class TripPublicResource extends BaseTripResource
             'mates' => TripMatePublicResource::collection($this->mates->where('status', TripMateStatusEnum::APPROVED)),
 
             'allowed_actions' => $user ? [
-                'join'   => $user->can('join', [TripMate::class, $this->resource]),
+                'join' => $user->can('join', [TripMate::class, $this->resource]),
                 'cancel' => $mate ? $user->can('cancel', $mate) : false,
                 'remove' => $mate ? $user->can('remove', $mate) : false,
             ] : [],

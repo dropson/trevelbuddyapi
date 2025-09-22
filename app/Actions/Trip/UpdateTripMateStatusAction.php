@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Actions\Trip;
 
 use App\Enums\TripMateStatusEnum;
@@ -7,15 +9,15 @@ use App\Models\TripMate;
 use App\Services\TripMateStatusMessage;
 use DomainException;
 
-class UpdateTripMateStatusAction
+final class UpdateTripMateStatusAction
 {
-    public function handle(TripMate $mate, TripMateStatusEnum $to,  $user)
+    public function handle(TripMate $mate, TripMateStatusEnum $to, $user): array
     {
         $from = $mate->status;
 
         $allowed = $mate->allowedTransitionsFor($user, $mate->trip);
 
-        if (!in_array($to->value, $allowed, true)) {
+        if (! in_array($to->value, $allowed, true)) {
             throw new DomainException("Transition {$from->value} -> {$to->value} is not allowed");
         }
         $mate->update(['status' => $to]);

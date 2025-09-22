@@ -58,20 +58,23 @@ final class Trip extends Model
     {
         return $this->belongsToMany(Language::class, 'trip_language');
     }
+
     public function mates()
     {
         return $this->hasMany(TripMate::class);
     }
-     public function approvedMates(): HasMany
+
+    public function approvedMates(): HasMany
     {
         return $this->mates()->where('status', TripMateStatusEnum::APPROVED->value);
     }
 
     public function scopeStatus(Builder $q, ?string $status): Builder
     {
-        if($status && $status !== '0'){
+        if ($status && $status !== '0') {
             return $q->where('status', $status);
         }
+
         return $q;
     }
 

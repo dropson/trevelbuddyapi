@@ -42,15 +42,15 @@ final class DatabaseSeeder extends Seeder
         });
         $trips = Trip::factory(53)->recycle($travelers)->create();
 
-        $trips->each(function (Trip $trip) use ($travelers) {
+        $trips->each(function (Trip $trip) use ($travelers): void {
             $max = min(2, $trip->max_mates);
             $count = fake()->numberBetween(2, $max);
             $mates = $travelers->where('id', '!=', $trip->creator_id)->random($count);
             TripMate::factory()->count($mates->count())->state(new Sequence(
-                fn($sequence) => [
+                fn ($sequence): array => [
                     'trip_id' => $trip->id,
                     'user_id' => $mates->get($sequence->index)->id,
-                    'status'  => fake()->randomElement([
+                    'status' => fake()->randomElement([
                         TripMateStatusEnum::APPROVED,
                         TripMateStatusEnum::PENDING,
                     ]),

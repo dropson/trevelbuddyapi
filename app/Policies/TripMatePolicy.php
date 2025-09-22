@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Policies;
 
 use App\Enums\TripMateStatusEnum;
@@ -8,27 +10,31 @@ use App\Models\Trip;
 use App\Models\TripMate;
 use App\Models\User;
 
-class TripMatePolicy
+final class TripMatePolicy
 {
-    public function join(User $user, Trip $trip)
+    public function join(User $user, Trip $trip): bool
     {
         return $trip->status === TripStatusEnum::ACTIVE
-            && !$trip->mates()->where('user_id', $user->id)->exists()
+            && ! $trip->mates()->where('user_id', $user->id)->exists()
             && $trip->mates()->where('status', TripMateStatusEnum::APPROVED)->count() < $trip->max_mates;
     }
 
     public function cancel(User $user, TripMate $mate): bool
     {
         $mate->loadMissing('trip');
+
         return $mate->user_id === $user->id
             && $mate->status === TripMateStatusEnum::PENDING;
     }
+
     public function remove(User $user, TripMate $mate): bool
     {
         $mate->loadMissing('trip');
+
         return $mate->user_id === $user->id
             && $mate->status === TripMateStatusEnum::APPROVED;
     }
+
     public function approve(User $user, TripMate $mate): bool
     {
         $mate->loadMissing('trip');
@@ -38,15 +44,19 @@ class TripMatePolicy
             && $mate->status === TripMateStatusEnum::PENDING
             && $trip->mates()->where('status', TripMateStatusEnum::APPROVED)->count() < $mate->trip->max_mates;
     }
+
     public function reject(User $user, TripMate $mate): bool
     {
         $mate->loadMissing('trip');
+
         return $mate->trip->creator_id === $user->id
             && $mate->status === TripMateStatusEnum::PENDING;
     }
+
     public function kick(User $user, TripMate $mate): bool
     {
         $mate->loadMissing('trip');
+
         return $mate->trip->creator_id === $user->id
             && $mate->status === TripMateStatusEnum::APPROVED;
     }

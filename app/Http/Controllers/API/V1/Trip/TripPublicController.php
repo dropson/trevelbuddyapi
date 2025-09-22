@@ -18,9 +18,11 @@ final class TripPublicController extends ApiController
 
         return TripPublicSummaryResource::collection($trips);
     }
+
     public function show(Trip $trip): TripPublicResource
     {
         abort_unless($trip->status === TripStatusEnum::ACTIVE, 404);
+
         return new TripPublicResource($trip->load('mates.user.profile'));
     }
 }

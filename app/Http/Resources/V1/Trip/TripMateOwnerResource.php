@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources\V1\Trip;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TripMateOwnerResource extends JsonResource
+final class TripMateOwnerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -26,8 +28,8 @@ class TripMateOwnerResource extends JsonResource
 
             'allowed_actions' => [
                 'approve' => $user->can('approve', $this->resource),
-                'reject'  => $user->can('reject', $this->resource),
-                'kick'    => $user->can('kick', $this->resource),
+                'reject' => $user->can('reject', $this->resource),
+                'kick' => $user->can('kick', $this->resource),
             ],
         ];
     }

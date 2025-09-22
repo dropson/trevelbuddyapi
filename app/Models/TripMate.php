@@ -16,7 +16,7 @@ final class TripMate extends Model
     protected $fillable = [
         'trip_id',
         'user_id',
-        'status'
+        'status',
     ];
 
     protected $casts = [
@@ -27,16 +27,18 @@ final class TripMate extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function trip(): BelongsTo
     {
         return $this->belongsTo(Trip::class);
     }
+
     public function allowedTransitionsFor(User $user, Trip $trip): array
     {
         if ($user->id === $trip->creator_id) {
-            return array_map(fn(TripMateStatusEnum $s) => $s->value, $this->status->ownerTransitions());
+            return array_map(fn (TripMateStatusEnum $s) => $s->value, $this->status->ownerTransitions());
         }
 
-        return array_map(fn(TripMateStatusEnum $s) => $s->value, $this->status->userTransitions());
+        return array_map(fn (TripMateStatusEnum $s) => $s->value, $this->status->userTransitions());
     }
 }
