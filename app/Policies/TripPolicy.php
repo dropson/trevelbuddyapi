@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
+use App\Enums\TripMateStatusEnum;
 use App\Enums\TripStatusEnum;
 use App\Models\Trip;
 use App\Models\User;
 
 final class TripPolicy
 {
+
+    public function viewMates(User $user, Trip $trip): bool
+    {
+        return $user->id === $trip->creator_id;
+    }
     public function publish(User $user, Trip $trip): bool
     {
         return $user->id === $trip->creator_id && in_array($trip->status, [TripStatusEnum::DRAFT, TripStatusEnum::REJECTED], true);
@@ -42,4 +48,5 @@ final class TripPolicy
         return ($user->id === $trip->creator_id)
             || $user->hasRole('moderator');
     }
+
 }

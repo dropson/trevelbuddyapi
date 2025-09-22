@@ -18,6 +18,7 @@ final class TripOwnerResource extends BaseTripResource
                 'name' => $this->creator->name,
             ],
             'description' => $this->description,
+            'max_mates' => $this->max_mates,
             'gender_preference' => $this->gender_preference,
             'accommodation' => $this->accommodation,
             'created_at' => $this->created_at,

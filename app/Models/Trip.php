@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\TripAccommodationEnum;
+use App\Enums\TripMateStatusEnum;
 use App\Enums\TripStatusEnum;
 use App\Enums\UserGenderEnum;
 use App\Enums\UserRoleEnum;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 
 final class Trip extends Model
@@ -56,10 +58,21 @@ final class Trip extends Model
     {
         return $this->belongsToMany(Language::class, 'trip_language');
     }
+    public function mates()
+    {
+        return $this->hasMany(TripMate::class);
+    }
+     public function approvedMates(): HasMany
+    {
+        return $this->mates()->where('status', TripMateStatusEnum::APPROVED->value);
+    }
 
     public function scopeStatus(Builder $q, ?string $status): Builder
     {
-        return $status !== null && $status !== '' && $status !== '0' ? $q->where('status', $q) : $q;
+        if($status && $status !== '0'){
+            return $q->where('status', $status);
+        }
+        return $q;
     }
 
     public function getImageUrlAttribute(): string
