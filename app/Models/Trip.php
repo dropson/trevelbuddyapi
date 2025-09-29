@@ -9,6 +9,7 @@ use App\Enums\TripMateStatusEnum;
 use App\Enums\TripStatusEnum;
 use App\Enums\UserGenderEnum;
 use App\Enums\UserRoleEnum;
+use App\Filters\TripFilter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -76,6 +77,11 @@ final class Trip extends Model
         }
 
         return $q;
+    }
+
+    public function scopeFilter(Builder $builder, TripFilter $filters): Builder
+    {
+        return $filters->apply($builder);
     }
 
     public function getImageUrlAttribute(): string

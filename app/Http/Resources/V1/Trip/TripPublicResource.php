@@ -21,7 +21,6 @@ final class TripPublicResource extends BaseTripResource
                 'name' => $this->creator->name,
             ],
             'description' => $this->description,
-            'gender_preference' => $this->gender_preference,
             'accommodation' => $this->accommodation,
             'max_mates' => $this->max_mates,
             'mates' => TripMatePublicResource::collection($this->mates->where('status', TripMateStatusEnum::APPROVED)),

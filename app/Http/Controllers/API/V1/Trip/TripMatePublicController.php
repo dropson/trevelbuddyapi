@@ -10,11 +10,12 @@ use App\Enums\TripMateStatusEnum;
 use App\Http\Controllers\ApiController;
 use App\Models\Trip;
 use App\Models\TripMate;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 final class TripMatePublicController extends ApiController
 {
-    public function join(Request $request, Trip $trip, JoinTripMateAction $action): \Illuminate\Http\JsonResponse
+    public function join(Request $request, Trip $trip, JoinTripMateAction $action): JsonResponse
     {
         $this->authorize('join', [TripMate::class, $trip]);
 
@@ -23,13 +24,20 @@ final class TripMatePublicController extends ApiController
         return $this->ok($message);
     }
 
-    public function leave(Request $request, Trip $trip, TripMate $mate, UpdateTripMateStatusAction $action): \Illuminate\Http\JsonResponse
+    public function cancel(Request $request, Trip $trip, TripMate $mate, UpdateTripMateStatusAction $action): JsonResponse
+    {
+        $this->authorize('cancel', $mate);
+        [$mate, $message] = $action->handle($mate, TripMateStatusEnum::CANCELLED, $request->user());
+
+        return $this->ok($message);
+    }
+
+    public function leave(Request $request, Trip $trip, TripMate $mate, UpdateTripMateStatusAction $action): JsonResponse
     {
         $this->authorize('remove', $mate);
 
         [$mate, $message] = $action->handle($mate, TripMateStatusEnum::REMOVED, $request->user());
 
         return $this->ok($message);
-
     }
 }

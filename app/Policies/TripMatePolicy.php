@@ -14,9 +14,26 @@ final class TripMatePolicy
 {
     public function join(User $user, Trip $trip): bool
     {
-        return $trip->status === TripStatusEnum::ACTIVE
-            && ! $trip->mates()->where('user_id', $user->id)->exists()
-            && $trip->mates()->where('status', TripMateStatusEnum::APPROVED)->count() < $trip->max_mates;
+        if ($trip->status !== TripStatusEnum::ACTIVE) {
+            return false;
+        }
+        $mate = $trip->mates()
+            ->where('user_id', $user->id)
+            ->first();
+
+        if (! $mate) {
+            return $trip->mates()
+                ->where('status', TripMateStatusEnum::APPROVED)
+                ->count() < $trip->max_mates;
+        }
+
+        return match ($mate->status) {
+            TripMateStatusEnum::APPROVED => false,
+            TripMateStatusEnum::PENDING => false,
+            default => $trip->mates()
+                ->where('status', TripMateStatusEnum::APPROVED)
+                ->count() < $trip->max_mates
+        };
     }
 
     public function cancel(User $user, TripMate $mate): bool

@@ -35,6 +35,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/', [TripPublicController::class, 'index']);
             Route::get('/{trip:slug}', [TripPublicController::class, 'show']);
             Route::post('/{trip:slug}/mates', [TripMatePublicController::class, 'join']);
+            Route::post('/{trip:slug}/mates/{mate}/cancel', [TripMatePublicController::class, 'cancel']);
             Route::post('/{trip:slug}/mates/{mate}/leave', [TripMatePublicController::class, 'leave']);
         });
 

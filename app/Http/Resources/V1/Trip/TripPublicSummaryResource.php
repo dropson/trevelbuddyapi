@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\V1\Trip;
 
+use App\Http\Resources\V1\LanguageResource;
 use Illuminate\Http\Request;
 
 final class TripPublicSummaryResource extends BaseTripResource
@@ -17,6 +18,8 @@ final class TripPublicSummaryResource extends BaseTripResource
                 'id' => $this->creator->id,
                 'name' => $this->creator->name,
             ],
+            'languages' => LanguageResource::collection($this->languages),
+            'gender_preference' => $this->gender_preference,
         ]);
     }
 }

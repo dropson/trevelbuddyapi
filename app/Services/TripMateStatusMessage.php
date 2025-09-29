@@ -13,6 +13,7 @@ final class TripMateStatusMessage
         return match ([$fromm, $to]) {
             [null, TripMateStatusEnum::PENDING] => 'Request to join the trip has been sent',
             [TripMateStatusEnum::REJECTED, TripMateStatusEnum::PENDING] => 'Request to join trip sent again',
+            [TripMateStatusEnum::CANCELLED, TripMateStatusEnum::PENDING] => 'Request to join trip sent again',
             [TripMateStatusEnum::APPROVED, TripMateStatusEnum::REMOVED] => 'You’ve left the trip',
             [TripMateStatusEnum::PENDING, TripMateStatusEnum::CANCELLED] => 'You cancelled your request.',
         };
